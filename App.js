@@ -3,13 +3,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 
 import { Animated, StyleSheet, Text, View } from 'react-native';
-import HomeScreen from './pages/HomeScreen';
-import MainSplashOne from './pages/mainSplashOne';
-import Otp from './pages/Otp';
-import SignIn from './pages/SignIn';
-import SplashOne from './pages/splashOne';
-import Subs from './pages/sub';
-import { Screens } from './routes/routeStacks';
+import Cart from './Views/Cart';
+import Item from './Views/Item';
+import Menu from './Views/Menu';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -39,45 +35,22 @@ export default function App() {
           header: () => null,
           headerStyleInterpolator: forFade
         }}>
-        {/* <Stack.Screen
-          name={'main'}
-          component={SplashOne}
-        /> */}
-        {/* <Stack.Screen
-          name={'slides'}
-          component={MainSplashOne}
-        /> */}
+        <Stack.Screen
+          name={'menu'}
+          component={Menu}
+        />
+        <Stack.Screen
+          name={'item'}
+          component={Item}
+        />
+        <Stack.Screen
+          name={'cart'}
+          component={Cart}
+        />
 
-        <Stack.Screen
-          name={'signin'}
-          component={SignIn}
-        />
-        <Stack.Screen
-          name={'signup'}
-          component={HomeScreen}
-        />
-        <Stack.Screen
-          name={'otp'}
-          component={Otp}
-        />
-        <Stack.Screen
-          name={'home'}
-          component={HomeScreen}
-        />
-        <Stack.Screen
-          name={'subscription'}
-          component={Subs}
-        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-});

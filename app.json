@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "dividdeApp",
-    "slug": "dividdeApp",
+    "slug": "taskproject",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "398a8f8a-3dbc-434e-ac98-f28ea6bcd78d"
+      }
+    },
+    "owner": "maskyray"
   }
 }
