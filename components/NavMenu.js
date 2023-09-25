@@ -4,7 +4,7 @@ import { Ionicons, MaterialIcons, SimpleLineIcons, AntDesign } from '@expo/vecto
 import { primary, secondary } from '../styles/general';
 import { items } from '../item';
 
-export default function NavMenu({ item, index }) {
+export default function NavMenu({ item, index, navigation, route }) {
     const [active, setActive] = useState('Home');
     // const [favouriteitem, setFavouriteItem] = useState(item.favourite)
     return (
@@ -26,32 +26,38 @@ export default function NavMenu({ item, index }) {
                 <Pressable onPress={() => { setActive('Home') }} style={{
                     alignItems: 'center',
                 }}>
-                    <AntDesign name="home" size={24} color={active == 'Home' ? primary : "black"} />
-                    <Text style={active == 'Home' ? [styles.nav_text, { color: primary }] : [styles.nav_text]} >
+                    <AntDesign name="home" size={24} color={route == 'Home' ? primary : "black"} />
+                    <Text style={route == 'Home' ? [styles.nav_text, { color: primary }] : [styles.nav_text]} >
                         Home
                     </Text>
                 </Pressable>
                 <Pressable
-                    onPress={() => { setActive('Menu') }}
+                    onPress={() => {
+                        setActive('Menu');
+                        navigation.navigate('menu')
+                    }}
                     style={{
                         alignItems: 'center',
                     }}>
                     <Image style={{
-                    }} source={require('../assets/heroicon.png')} tintColor={active == 'Menu' ? primary : "black"} />
+                    }} source={require('../assets/heroicon.png')} tintColor={route == 'menu' ? primary : "black"} />
 
-                    <Text style={active == 'Menu' ? [styles.nav_text, { color: primary }] : [styles.nav_text]}
+                    <Text style={route == 'menu' ? [styles.nav_text, { color: primary }] : [styles.nav_text]}
                     >
                         Menu
                     </Text>
                 </Pressable>
                 <Pressable
-                    onPress={() => { setActive('Cart') }}
+                    onPress={() => {
+                        setActive('Cart')
+                        navigation.navigate('cart')
+                    }}
                     style={{
                         alignItems: 'center',
                     }}>
-                    <SimpleLineIcons name="handbag" size={24} color={active == 'Cart' ? primary : "black"} />
+                    <SimpleLineIcons name="handbag" size={24} color={route == 'cart' ? primary : "black"} />
                     <Text
-                        style={active == 'Cart' ? [styles.nav_text, { color: primary }] : [styles.nav_text]}
+                        style={route == 'cart' ? [styles.nav_text, { color: primary }] : [styles.nav_text]}
                     >
                         Cart
                     </Text>
@@ -68,7 +74,7 @@ export default function NavMenu({ item, index }) {
                     }} source={require('../assets/images/prof2.jpeg')} />
 
                     <Text
-                        style={active == 'Account' ? [styles.nav_text, { color: primary }] : [styles.nav_text]}
+                        style={route == 'account' ? [styles.nav_text, { color: primary }] : [styles.nav_text]}
                     >
                         Account
                     </Text>

@@ -1,19 +1,23 @@
 import React, { useState } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
-import { Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { primary } from '../styles/general';
-import { items } from '../item';
 
-export default function MenuItem({ item, setFavourite, index, addtoCart }) {
-
+export default function MenuItem({ item, setFavourite, index, addtoCart, navigation }) {
     const [favouriteitem, setFavouriteItem] = useState(item.favourite)
+    const [cart_item, setCartItem] = useState({
+        ...item,
+        quantity: 1,
+    })
     return (
-        <View style={{
-            backgroundColor: 'white',
-            borderRadius: 10,
-            padding: 10,
-            width: '48%',
-        }}>
+        <View
+
+            style={{
+                backgroundColor: 'white',
+                borderRadius: 10,
+                padding: 10,
+                width: '48%',
+            }}>
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-end'
@@ -25,7 +29,11 @@ export default function MenuItem({ item, setFavourite, index, addtoCart }) {
                     <MaterialIcons onPress={() => { setFavouriteItem(!favouriteitem) }} name="favorite" size={24} color="#D91442" />
                 }
             </View>
-            <View style={{ alignSelf: 'center', height: 100, width: 100, }}>
+            <Pressable
+                onPress={() => {
+                    navigation.navigate('item', { item: index })
+                }}
+                style={{ alignSelf: 'center', height: 100, width: 100, }}>
                 <Image style={{
                     height: 100,
                     width: 100,
@@ -33,7 +41,7 @@ export default function MenuItem({ item, setFavourite, index, addtoCart }) {
                     resizeMode: 'contain',
                     // borderRadius: 150,
                 }} source={item.image} alt={item.name} />
-            </View>
+            </Pressable>
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'space-around',
@@ -45,14 +53,14 @@ export default function MenuItem({ item, setFavourite, index, addtoCart }) {
                     {item.name.substring(0, 12) + '...'}
                 </Text>
                 <Text style={{ fontSize: 20, color: primary }}>
-                    {item.price}
+                    £{item.price}
                 </Text>
             </View>
 
             <View >
                 <Pressable
                     onPress={() => {
-                        addtoCart(index)
+                        addtoCart(cart_item)
                     }}
                     style={{
                         flexDirection: 'row',

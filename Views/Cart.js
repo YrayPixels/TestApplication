@@ -1,25 +1,36 @@
 import { StatusBar } from 'expo-status-bar'
-import React, { useState } from 'react'
-import { Modal, ScrollView, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Modal, Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Header from '../components/Header'
-import MenuItem from '../components/MenuItem'
 import NavMenu from '../components/NavMenu'
-import Search from '../components/Search'
-import { items } from '../item'
 import { primary } from '../styles/general'
+import CartItems from '../components/CartItems'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export default function Cart() {
-    const [menuItems, setMenuItems] = useState(items)
+
+export default function Cart({ route, navigation }) {
+    const [cartItems, setCartItems] = useState('')
+    let total = 0;
+    const [message, setMessage] = useState('')
     const [showModal, setShowModal] = useState(false);
 
-    function addtoCart(index) {
-        setShowModal(true)
-    }
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const value = await AsyncStorage.getItem('cartitems');
+                if (value !== null) {
+                    setCartItems(JSON.parse(value))
+                } else {
+                    console.log('empty');
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        getData()
+    }, [])
 
-    function setFavourite(id) {
-
-    }
     return (
         <SafeAreaProvider style={{ backgroundColor: '#E1E5E9', }}>
 
@@ -27,79 +38,73 @@ export default function Cart() {
             <View style={{
                 top: 70,
             }}>
-                <Header title={'Menu'} hasBackButton={false} />
-                <View style={{
-                    width: '90%',
-                    alignSelf: 'center',
-                }}>
-                    <Search />
-                </View>
+                <Header title={'Cart'} hasBackButton={true} navigation={navigation} />
                 <ScrollView
                     overScrollMode={'always'}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
+                    style={{
                         paddingVertical: 20,
                         paddingHorizontal: 20,
-                        gap: 10,
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
+                        height: 500,
                     }}
                 >
-
-                    {menuItems.map((item, index) => {
+                    {Array.isArray(cartItems) ? cartItems.map((item, index) => {
+                        total += Number(item.price) * item.quantity
                         return (
-                            <MenuItem key={index} addtoCart={addtoCart} setFavourite={setFavourite} index={index} item={item} />
+                            <CartItems key={index} navigation={navigation} index={index} item={item} />
                         )
                     })
+                        :
+                        <View>
+                            <Text style={{ fontSize: 50, textAlign: 'center' }}>
+                                Cart is empty
+                            </Text>
+                        </View>
                     }
-
-
                 </ScrollView>
 
-            </View>
-
-            <Modal
-                transparent
-                visible={showModal}
-                onRequestClose={() => {
-                    setShowModal(false)
-                }}
-                animationType='slide'
-            >
-                <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: '#000000990',
-                        alignItems: 'center'
+                <View style={{
+                    marginHorizontal: 25,
+                    marginTop: 10,
+                }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginBottom: 10,
                     }}>
-                    <View
-                        onPress={() => { setShowModal(false) }}
-                        style={{
-                            position: 'absolute',
-                            height: 400,
-                            width: '100%',
-                            bottom: 0,
-                            backgroundColor: primary,
-                            borderTopRightRadius: 20,
-                            borderTopLeftRadius: 20,
-                            // elevation: 10,
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
                         <Text style={{
-                            fontSize: 25,
-                            fontWeight: 'bold',
-                            color: 'white',
+                            // fontWeight: 'bold',
+                            fontSize: 18,
                         }}>
-                            Item Added to Cart
+                            Total ({cartItems.length} Items)
+                        </Text>
+                        <Text style={{
+                            fontWeight: 'bold',
+                            fontSize: 18,
+                        }}>
+                            £ {total}
                         </Text>
                     </View>
 
+                    <Pressable style={{
+                        backgroundColor: primary,
+                        borderRadius: 40,
+                        padding: 20,
+                        alignItems: "center",
+                    }}>
+                        <Text style={{
+                            fontWeight: 'bold',
+                            fontSize: 20,
+                            color: 'white'
+                        }}>
+                            Checkout - £ {total}
+                        </Text>
+                    </Pressable>
                 </View>
 
-            </Modal>
+            </View>
 
-            <NavMenu />
+            <NavMenu navigation={navigation} route={route.name} />
 
         </SafeAreaProvider>
     )
